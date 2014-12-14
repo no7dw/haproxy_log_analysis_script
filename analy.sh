@@ -1,8 +1,8 @@
 #!/bin/bash
-假设apache日志格式为：
+#假设apache日志格式为：
 118.78.199.98 – - [09/Jan/2010:00:59:59 +0800] “GET /Public/Css/index.css HTTP/1.1″ 304 – “http://www.a.cn/common/index.php” “Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; GTB6.3)”
 
-问题1：在apachelog中找出访问次数最多的10个IP。
+#问题1：在apachelog中找出访问次数最多的10个IP。
 awk '{print $1}' apache_log |sort |uniq -c|sort -nr|head -n 10
 
 awk 首先将每条日志中的IP抓出来，如日志格式被自定义过，可以 -F 定义分隔符和 print指定列；
