@@ -1,28 +1,32 @@
 #!/bin/bash
 #假设apache日志格式为：
-118.78.199.98 – - [09/Jan/2010:00:59:59 +0800] “GET /Public/Css/index.css HTTP/1.1″ 304 – “http://www.a.cn/common/index.php” “Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; GTB6.3)”
+# 118.78.199.98 – - [09/Jan/2010:00:59:59 +0800] “GET /Public/Css/index.css HTTP/1.1″ 304 – “http://www.a.cn/common/index.php” “Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; GTB6.3)”
+#haproxy
+#                           5                                                                               9                                    10        11  12                          18   19                 
+# Dec 25 00:35:51 localhost haproxy[42949]: 113.142.18.121:52851 [25/Dec/2014:00:35:51.792] node_server_in finance_invest_server/tiger_node_8003 0/0/0/1/1 200 1331 - - ---- 0/0/0/0/0 0/0 "GET / HTTP/1.0"
 
+#ip is at col 6 
 #问题1：在apachelog中找出访问次数最多的10个IP。
-awk '{print $1}' apache_log |sort |uniq -c|sort -nr|head -n 10
+awk '{print $6}' haproxy.log|  awk '{split($0,a,":");print a[1]}'  |sort |uniq -c|sort -nr|head -n 10
+# explain:
+# awk 首先将每条日志中的IP抓出来，如日志格式被自定义过，可以 -F 定义分隔符和 print指定列；
+# sort进行初次排序，为的使相同的记录排列到一起；
+# upiq -c 合并重复的行，并记录重复次数。
+# sort -nr按照数字进行倒叙排序。
+# head进行前十名筛选.
 
-awk 首先将每条日志中的IP抓出来，如日志格式被自定义过，可以 -F 定义分隔符和 print指定列；
-sort进行初次排序，为的使相同的记录排列到一起；
-upiq -c 合并重复的行，并记录重复次数。
-head进行前十名筛选；
-sort -nr按照数字进行倒叙排序。
 
-我参考的命令是：
-显示10条最常用的命令
-sed -e "s/| //n/g" ~/.bash_history | cut -d ' ' -f 1 | sort | uniq -c | sort -nr | head
 
-问题2：在apache日志中找出访问次数最多的几个分钟。
-awk '{print  $4}' access_log |cut -c 14-18|sort|uniq -c|sort -nr|head
-awk 用空格分出来的第四列是[09/Jan/2010:00:59:59；
-cut -c 提取14到18个字符
-剩下的内容和问题1类似。
+#问题2：在apache日志中找出访问次数最多的几个分钟。
+awk '{print  $3}' haproxy.log |cut -c 1-5|sort|uniq -c|sort -nr|head
+#awk 用空格分出来的第四列是[09/Jan/2010:00:59:59；
+#cut -c 提取14到18个字符
+#剩下的内容和问题1类似。
 
-问题3：在apache日志中找到访问最多的页面：
-awk '{print $11}' apache_log |sed 's/^.*cn/(.*/)/"//1/g'|sort |uniq -c|sort -rn|head
+# 问题3：在apache日志中找到访问最多的页面：
+# | sed 's/?.*/\ /g'
+# sed replace ?and later with space
+awk '{print $19}' haproxy.log| sed 's/?.*/\ /g' |sort |uniq -c|sort -rn|head
 
 类似问题1和2，唯一特殊是用sed的替换功能将”http://www.a.cn/common/index.php”替换成括号内的内容：”http://www.a.cn（/common/index.php）”
 
