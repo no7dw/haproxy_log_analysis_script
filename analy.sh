@@ -2,7 +2,7 @@
 #假设apache日志格式为：
 # 118.78.199.98 – - [09/Jan/2010:00:59:59 +0800] “GET /Public/Css/index.css HTTP/1.1″ 304 – “http://www.a.cn/common/index.php” “Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; GTB6.3)”
 #haproxy
-#                           5                                                                               9                                    10        11  12                          18   19                 
+#                           5                                                                               9                                    10 timer   11  12          connections      18  19                 
 # Dec 25 00:35:51 localhost haproxy[42949]: 113.142.18.121:52851 [25/Dec/2014:00:35:51.792] node_server_in finance_invest_server/tiger_node_8003 0/0/0/1/1 200 1331 - - ---- 0/0/0/0/0 0/0 "GET / HTTP/1.0"
 
 #ip is at col 6 
@@ -32,6 +32,11 @@ awk '{print $19}' haproxy.log| sed 's/?.*/\ /g' |sort |uniq -c|sort -rn|head
 
 # 问题5: 那个node 处理最多请求：
 awk '{print $9}' haproxy.log |sort|uniq -c|sort -nr|head
+
+# slow server-side
+# still with bug
+# to do : 如何补充上$19
+awk '{print $10 " " $19}' haproxy.log |  awk '{split($1,a,"/");print a[5]} $19'
 
 类似问题1和2，唯一特殊是用sed的替换功能将”http://www.a.cn/common/index.php”替换成括号内的内容：”http://www.a.cn（/common/index.php）”
 

@@ -12,11 +12,11 @@ Jul 16 11:28:48 localhost haproxy[61454]: 119.39.3.85:18658 [16/Jul/2014:11:28:4
 
 
 Timer  Tq / Tw / Tc / Tr / Tt       ----    1/0/0/227/281   5776/0/0/28/6477
-	"Tq" is the total time in milliseconds spent waiting for the client to send a full HTTP request, not counting data.  Large times here generally indicate network trouble between the client and haproxy.
+	"Tq" is the total time in milliseconds spent waiting for the client to send a full HTTP request, not counting data.  Large times here generally indicate network trouble between the client and haproxy. #large stands for slow client-side
 	"Tw" is the total time in milliseconds spent waiting in the various queues.
 	"Tc" is the total time in milliseconds spent waiting for the connection to establish to the final server, including retries.
-	"Tr" is the total time in milliseconds spent waiting for the server to send a full HTTP response, not counting data.
-"Tt" is the total time in milliseconds elapsed between the accept and the last close.
+	"Tr" is the total time in milliseconds spent waiting for the server to send a full HTTP response, not counting data. #large stands for network busy server
+"Tt" is the total time in milliseconds elapsed between the accept and the last close. #large stands for slow server-side
 
 
 Session state  ----   ----   CD--   SH--
