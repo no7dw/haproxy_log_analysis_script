@@ -15,6 +15,8 @@ awk '{print $6}' haproxy.log|  awk '{split($0,a,":");print a[1]}'  |sort |uniq -
 # sort -nr按照数字进行倒叙排序。
 # head进行前十名筛选.
 
+# 问题：某些ip 在干嘛？
+grep "58.67.144.241" haproxy.log | awk '{print $19}' | sort | uniq -c | sort -nr | head -n 10
 
 
 #问题2：在apache日志中找出访问次数最多的几个分钟。
@@ -27,6 +29,9 @@ awk '{print  $3}' haproxy.log |cut -c 1-5|sort|uniq -c|sort -nr|head
 # | sed 's/?.*/\ /g'
 # sed replace ?and later with space
 awk '{print $19}' haproxy.log| sed 's/?.*/\ /g' |sort |uniq -c|sort -rn|head
+
+# 问题5: 那个node 处理最多请求：
+awk '{print $9}' haproxy.log |sort|uniq -c|sort -nr|head
 
 类似问题1和2，唯一特殊是用sed的替换功能将”http://www.a.cn/common/index.php”替换成括号内的内容：”http://www.a.cn（/common/index.php）”
 
