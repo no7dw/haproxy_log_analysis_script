@@ -16,7 +16,7 @@ Timer  Tq / Tw / Tc / Tr / Tt       ----    1/0/0/227/281   5776/0/0/28/6477
 	"Tw" is the total time in milliseconds spent waiting in the various queues.
 	"Tc" is the total time in milliseconds spent waiting for the connection to establish to the final server, including retries.
 	"Tr" is the total time in milliseconds spent waiting for the server to send a full HTTP response, not counting data. #large stands for network busy server
-"Tt" is the total time in milliseconds elapsed between the accept and the last close. #large stands for slow server-side
+	"Tt" is the total time in milliseconds elapsed between the accept and the last close. #large stands for slow server-side
 
 
 Session state  ----   ----   CD--   SH--

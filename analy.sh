@@ -34,9 +34,13 @@ awk '{print $19}' haproxy.log| sed 's/?.*/\ /g' |sort |uniq -c|sort -rn|head
 awk '{print $9}' haproxy.log |sort|uniq -c|sort -nr|head
 
 # slow server-side
-# still with bug
-# to do : 如何补充上$19
-awk '{print $10 " " $19}' haproxy.log |  awk '{split($1,a,"/");print a[5]} $19'
+awk '{print $10 " " $19}' haproxy.log |  awk '{split($1,a,"/");print a[5]" " $2}' | sort -nr | awk '{if ($1 > 10000) print $0}'
+# awk 获取ha timer
+# awk split / ,获取最后一个时间（ms）－－ 服务器accept 到 close 时间
+# 输出时间 ，request url路径
+# 排序， 倒序
+# 筛选出时间较长（1000ms 以上）的request url
+
 
 类似问题1和2，唯一特殊是用sed的替换功能将”http://www.a.cn/common/index.php”替换成括号内的内容：”http://www.a.cn（/common/index.php）”
 
